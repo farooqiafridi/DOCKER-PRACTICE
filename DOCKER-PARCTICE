@@ -1,0 +1,141 @@
+mkdir tata
+cd tata
+vi Dockerfile
+vi supporting file
+vi text file
+ls - 3 files
+pwd ---- /root/tata/
+-----------------------------------------------------
+FROM ubuntu centos java puto c 
+ENV user=/var/log/tat
+WORKDIR  ${user}
+COPY  .  /usr/jjj
+ADD  /root /var
+RUN  mkdir
+RUN package install {apt get install maven} 
+RUN apt get update
+RUN  apt  install maven
+CMD java -jar jenkins.war
+------------------------------------------------------------
+pwd --- /root/tata
+---------------------------------------------------
+
+# docker build -t image:tagname .   {image build} 
+--------------------------------------------------------------
+pwd /root/fun/
+
+
+# docker build -t image:tagname -f dockerfile /root
+
+-----------------------------------------------------------------
+
+# docker images
+# docker image ls
+# docker image history imagename
+---------------------------------------------------------------
+
+# docker conatiner run -it --name=cont-001 image:tagname   {dockerfile --cmd}
+
+# docker run -it --name conta--001 image:tagname cat /etc/pass    {dockerfile -cmd-overide}
+
+# docker run -d --name cont-001 image:tagname 
+-------------------------------------------------------------------------------
+
+# docker comntainer ls
+# docker container ls -a
+# docker container ps
+# docker container ps -a
+#
+------------------------------------------------------------------------------
+# docker exec -it {containername or container id } {command}===/bin/bas --sh====   (to log in to container) 
+
+# docker exec -it container name     { ls===cat==} (to seee container info from ooutside with out login)
+
+---------------------------------------------------------------------------------
+
+
+
+
+ DOCKER FILE
+#####################################
+
+FROM ubuntu
+WORKDIR /root
+RUN apt-get update
+RUN apt-get install maven -y
+ENTRYPOINT mvn archetype:generate -DgroupId=com.mycompany.app -DartifactId=my-app -DarchetypeArtifactId=maven-archetype-quickstart -DarchetypeVersion=1.4 -DinteractiveMode=false
+CMD ['/bin/bash' '-c' 'maven --version']
+
+# docker build -t imagename:tagname  . {Dockerfile}
+
+# docker build -t imagename:tagname -f filename {.}  /root/tata    {have to give filename }
+
+#docker build -t myproc:v1 -f file  /root/tata
+image name==== myproc:v1
+----------------------------------------------------------------------------------------------------------------------
+
+#docker container run -it --name=myctrl myproc:v1
+
+{ENTRYPOINT}  {CMD}
+
+----------------------------------------------------------------------------------------------------------
+# docker exec -it myctrl
+-----------------------------------------------------------------------------
+
+MULTI-STAGE Dockerfile
+
+FROM ubuntu 
+WORKDIR /root
+RUN apt-get update
+RUN apt-get install maven -y
+RUN mvn archetype:generate -DgroupId=com.mycompany.app -DartifactId=my-app -DarchetypeArtifactId=maven-archetype-quickstart -DarchetypeVersion=1.4 -DinteractiveMode=false
+
+FROM alpine
+COPY --from=o /root .
+CMD ls -l
+
+FROM tomcat
+COPY --from=1 /myapp /
+
+-----------------------------------------------------------------------------------------------------------------------------------
+MULTISTAGE
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+FROM  golang:1.6-alpine
+RUN mkdir /app
+ADD . /app/
+WORKDIR /app
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
+
+FROM alpine
+COPY --from=0 /app/main /app
+EXPOSE 80
+CMD ["/app"]
+
+
+---------------------------------------------------------------------------------------------------------------
+HOW TO REDUCE LAYERS
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+FROM centos
+COPY . .
+WORKDIR  /root/app
+RUN yum update && yum install gi \
+    yum install git \
+    yum install maven 
+
+------------------------------------------------------------------------------------------------------------------------
+
+CONTAINER lINKS
+
+
+ctrl ====> forntend web-app
+
+
+ctrl===> backend redis
+                                           HOST  CONT
+docker run -it --link=redis --name web-app -p 80:80  tomcat:v1
+                                           -
+
+
+=======================================+++++++++++++++++++++++++++++++++++---------------------=========================
+
